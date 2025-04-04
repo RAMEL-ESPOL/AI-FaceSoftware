@@ -1,6 +1,5 @@
 sounddevice
 pyaudio
-portaudio19-dev
 dynamixel_sdk
 TTS
 ffmpeg
