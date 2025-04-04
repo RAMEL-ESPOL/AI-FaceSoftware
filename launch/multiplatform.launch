@@ -1,0 +1,5 @@
+<launch>
+
+    <node pkg="software_interactive" type= "voz_yaren_face.py" name="voz_yaren_face" output="screen"/>
+
+</launch>

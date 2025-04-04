@@ -11,7 +11,7 @@ import time
 from moviepy.editor import VideoFileClip
 from queue import Queue
 # Añade el directorio src a sys.path
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__), ".."))
 from video_generation import total_video_generation
 import numpy as np
 import rospy
