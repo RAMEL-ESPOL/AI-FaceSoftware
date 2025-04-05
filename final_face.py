@@ -23,17 +23,17 @@ sys.path.append(current_dir)
 
 
 # Rutas de las imágenes
-carpetaImgs = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'caritas')) + "/"
+carpetaImgs = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'faces')) + "/"
 IMAGEN_DEFAULT = carpetaImgs + "default.png"
-IMAGEN_PARPADEO = carpetaImgs + "parpadeo2_normal.png"
-IMAGEN_FELIZ = carpetaImgs + "feliz.png"
+IMAGEN_PARPADEO = carpetaImgs + "blink2_normal.png"
+IMAGEN_FELIZ = carpetaImgs + "happy.png"
 IMAGEN_MEH = carpetaImgs + "meh.png"
-IMAGEN_MUERTO = carpetaImgs + "muerto.png"
-IMAGEN_DINERO = carpetaImgs + "dinero.png"
-IMAGEN_PENSANDO = carpetaImgs + "pensando.png"
-IMAGEN_BOCAABIERTA = carpetaImgs + "boca abierta.png"
-IMAGEN_BOCACERRADA = carpetaImgs + "boca cerrada.png"
-IMAGEN_LISTO = carpetaImgs + "listo.png"
+IMAGEN_MUERTO = carpetaImgs + "game_over.png"
+IMAGEN_DINERO = carpetaImgs + "money.png"
+IMAGEN_PENSANDO = carpetaImgs + "thinking.png"
+IMAGEN_BOCAABIERTA = carpetaImgs + "open_mouth.png"
+IMAGEN_BOCACERRADA = carpetaImgs + "close_mouth.png"
+IMAGEN_LISTO = carpetaImgs + "ready.png"
 # Lista de rutas de imágenes
 
 SECUENCIA_IMAGENES = [IMAGEN_PARPADEO,IMAGEN_DEFAULT]
@@ -56,7 +56,7 @@ sys.path.append(directorio_principal)
 
 # Ahora puedes usar funciones o clases de utilidad
 from audio_processing.utils import read_file
-from audio_processing.asistente import Asistente
+from audio_processing.assistant import Assistant
 
 
 def moverVentana():
@@ -120,36 +120,36 @@ def centrar_ventana(pantalla_res, position):
     ]
 
 
-class voz_yaren_face:
+class final_face:
     def __init__(self):
-        rospy.init_node('voz_yaren_face')
+        rospy.init_node('final_face')
         self.pub_commands = rospy.Publisher('/movement_commands', String, queue_size=1)
         
         self.number = "0"
         self.respuesta = ""
         self.previous_respuesta = ""  # Para rastrear la respuesta anterior
         CONFIG_PARAMS = read_file(directorio_principal + "/" + "config", "yaml")
-        self.comandos = CONFIG_PARAMS["comandos"]
+        self.comands = CONFIG_PARAMS["comands"]
 
 
         try:
-            with open(directorio_principal + "/" + "respuestas_basicas.json", "r", encoding='utf-8') as f:
-                respuestas_basicas = json.load(f)
-                self.respuestas_basicas = {key.lower(): value for key, value in respuestas_basicas.items()}
+            with open(directorio_principal + "/" + "basics_responses.json", "r", encoding='utf-8') as f:
+                basics_responses = json.load(f)
+                self.basics_responses = {key.lower(): value for key, value in basics_responses.items()}
         except (FileNotFoundError, json.JSONDecodeError):
             print("Error al cargar respuestas básicas.")
-            self.respuestas_basicas = {}
+            self.basics_responses = {}
 
-        self.asistente = Asistente(CONFIG_PARAMS["stt"]["model_size"],
+        self.assistant = Assistant(CONFIG_PARAMS["stt"]["model_size"],
                                    CONFIG_PARAMS["stt"]["recording_time"],
                                    CONFIG_PARAMS["stt"]["silence_break"],
                                    CONFIG_PARAMS["stt"]["sensibility"],
-                                   CONFIG_PARAMS["asistente"]["wake_word"],
-                                   CONFIG_PARAMS["comandos"],
+                                   CONFIG_PARAMS["assistant"]["wake_word"],
+                                   CONFIG_PARAMS["comands"],
                                    CONFIG_PARAMS["prompt"],
-                                   self.respuestas_basicas)
+                                   self.basics_responses)
         
-        #        va = Asistente(model, record_timeout, phrase_timeout, energy_threshold, wake_word,comandos,prompt,respuestas_basicas)
+        #        va = Assistant(model, record_timeout, phrase_timeout, energy_threshold, wake_word,comands,prompt,basics_responses)
 
 
         # Configuración de la ventana
@@ -182,14 +182,14 @@ class voz_yaren_face:
             # Esperar si la detección de comandos está pausada
             self.detect_commands_running.wait()
 
-            pose_num, respuesta = self.asistente.listen_movement_comand()
+            pose_num, respuesta = self.assistant.listen_movement_comand()
 
             self.number = str(pose_num + 1)
             self.pub_commands.publish(f"{self.number}")
             print(f"Publicado: {self.number}")
 
             if pose_num != -1:
-                print(self.comandos[pose_num])
+                print(self.comands[pose_num])
 
             if not self.video_ready.is_set():
                 threading.Thread(target=self.generate_video, args=(respuesta,)).start()
@@ -381,5 +381,5 @@ class voz_yaren_face:
 
 
 if __name__ == "__main__":
-    face = voz_yaren_face()
+    face = final_face()
     face.main()

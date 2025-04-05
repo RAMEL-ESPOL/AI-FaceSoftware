@@ -22,15 +22,15 @@ warnings.filterwarnings("ignore")
 openai.api_key = ""  # Coloca tu clave de OpenAI aquí
 print(openai.api_key )
 
-class Asistente:
-    def __init__(self, model, record_timeout, phrase_timeout, energy_threshold, wake_word, comandos, prompt,respuestas_basicas):
+class Assistant:
+    def __init__(self, model, record_timeout, phrase_timeout, energy_threshold, wake_word, comands, prompt,basics_responses):
         self.transcription = ['']
         self.audio_model = whisper.load_model(model)
         self.record_timeout = record_timeout
         self.wake_word = [word.lower() for word in wake_word]
-        self.comandos = comandos
+        self.comands = comands
         self.prompt = prompt
-        self.respuestas_basicas = respuestas_basicas
+        self.basics_responses = basics_responses
         self.listening = True  # Nueva bandera para controlar la escucha
 
 
@@ -58,7 +58,7 @@ class Asistente:
                                                 "text": self.prompt
                                             },{
                                                 "type": "text",
-                                                "text": json.dumps(self.respuestas_basicas, ensure_ascii=False, indent=4)
+                                                "text": json.dumps(self.basics_responses, ensure_ascii=False, indent=4)
 
                                             },
                                         ],
@@ -112,7 +112,7 @@ class Asistente:
                 print(f"Texto transcrito: {text}")
 
                 # Extraer las claves del JSON
-                keys = list(self.respuestas_basicas.keys())
+                keys = list(self.basics_responses.keys())
 
                 # Comprobar si "JULIO" fue mencionado
                 # Procesar si el wake] _word está en el texto
@@ -137,9 +137,9 @@ class Asistente:
                             print(respuesta)
                             #self.tts(respuesta)
                             #self.play_audio_pygame("audio.mp3")
-                            if mensaje_limpio in self.comandos:
+                            if mensaje_limpio in self.comands:
                                 # Obtener e imprimir la posición del mensaje en la lista
-                                indice = self.comandos.index(mensaje_limpio)
+                                indice = self.comands.index(mensaje_limpio)
                                 print(f"El comando '{mensaje_limpio}' está en la lista de comandos en la posición {indice}.")
                                 return indice, respuesta
                             else:
@@ -152,13 +152,13 @@ class Asistente:
                     mensaje = matching_key  # El mensaje será la clave en este caso
                     mensaje = "Humano: " + mensaje
                     #respuesta = self.call_gpt(mensaje)
-                    respuesta = self.respuestas_basicas[matching_key]
+                    respuesta = self.basics_responses[matching_key]
                     print(respuesta)
                     #self.tts(respuesta)
                     #self.play_audio_pygame("audio.mp3")
-                    if matching_key in self.comandos:
+                    if matching_key in self.comands:
                         # Obtener e imprimir la posición del mensaje en la lista
-                        indice = self.comandos.index(matching_key)
+                        indice = self.comands.index(matching_key)
                         print(f"El comando '{matching_key}' está en la lista de comandos en la posición {indice}.")
                         return indice, respuesta
                     else:
@@ -175,16 +175,16 @@ class Asistente:
 # Aquí puedes incluir tu lógica para ejecutar el asistente
 if __name__ == "__main__":
     # Instanciar el asistente con todos los parámetros necesarios
-    asistente = Asistente(
+    assistant = Assistant(
         model='large',                # Modelo Whisper
         record_timeout=5,             # Tiempo máximo de grabación por frase
         phrase_timeout=2,             # Tiempo de espera para considerar una frase como finalizada
         energy_threshold=300,         # Umbral de energía para detección de sonido
         wake_word=['julio'] ,            # Palabra de activación
-        comandos= [] ,  # Comandos
+        comands= [] ,  # comands
         prompt= """Eres un asistente amigable diseñado para ayudar con tareas relacionadas con el robot YAREN.
         Responde de forma clara y útil a las solicitudes, y proporciona ayuda técnica cuando sea necesario.
         Responde en maximo 50 palabras""",          # Descripción del asistente (prompt)
-        respuestas_basicas = {}
+        basics_responses = {}
     )
-    asistente.listen()
+    assistant.listen()

@@ -1,5 +1,5 @@
 from utils import read_file
-from asistente import Asistente
+from assistant import Assistant
 
 import sys
 import os
@@ -18,24 +18,24 @@ def main():
     record_timeout = CONFIG_PARAMS["stt"]["recording_time"]
     phrase_timeout = CONFIG_PARAMS["stt"]["silence_break"]
     energy_threshold = CONFIG_PARAMS["stt"]["sensibility"]
-    wake_word = CONFIG_PARAMS["asistente"]["wake_word"]
+    wake_word = CONFIG_PARAMS["assistant"]["wake_word"]
 
-    comandos = CONFIG_PARAMS["comandos"]
+    comands = CONFIG_PARAMS["comands"]
 
     prompt = CONFIG_PARAMS["prompt"]
 
-    respuestas_basicas = {}
+    basics_responses = {}
 
     try:
-        with open(directorio_principal + "/" + "respuestas_basicas.json", "r", encoding='utf-8') as f:
-            respuestas_basicas = json.load(f)
-            respuestas_basicas = {key.lower(): value for key, value in respuestas_basicas.items()}
+        with open(directorio_principal + "/" + "basics_responses.json", "r", encoding='utf-8') as f:
+            basics_responses = json.load(f)
+            basics_responses = {key.lower(): value for key, value in basics_responses.items()}
     except (FileNotFoundError, json.JSONDecodeError):
         print("Error al cargar respuestas básicas.")
-        respuestas_basicas = {}
+        basics_responses = {}
 
     while True:
-        va = Asistente(model, record_timeout, phrase_timeout, energy_threshold, wake_word,comandos,prompt,respuestas_basicas)
+        va = Assistant(model, record_timeout, phrase_timeout, energy_threshold, wake_word,comands,prompt,basics_responses)
         print(va.listen_movement_comand())
     #va.write_transcript()
 

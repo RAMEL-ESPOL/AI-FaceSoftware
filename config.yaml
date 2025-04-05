@@ -5,7 +5,7 @@ stt:
   silence_break: 1
   model_size: base
   sensibility: 800
-asistente:
+assistant:
   wake_word: 
    - bobi
    - bobby
@@ -18,7 +18,7 @@ asistente:
    - Boby
    - Bobbie
 
-comandos:
+comands:
   - dinero
   - me puedes dar un abrazo
   - sorpresa

@@ -206,16 +206,16 @@ def total_video_generation(respuesta):
     openai.api_key = ""  # Coloca tu clave de OpenAI aquí
     print(openai.api_key )
 
-    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'caritas')) + "/"
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'faces')) + "/"
 
     # Configuración inicial
     #respuesta = "Estoy emocionado por la fiesta sorpresa."
     audio_path, trimmed_audio_path = path + "audio.mp3", path + "trimmed_audio.mp3"
-    image_folder = path + "partes separadas sin fondo/bocas"
-    points_folder = path + "partes separadas sin fondo/bocas_points"
+    image_folder = path + "separate_parts_without_background/mouths"
+    points_folder = path + "separate_parts_without_background/mouths_points"
     output_video_with_audio = path + "output_video_with_audio.mp4"
-    eyes_folder = path + "partes separadas sin fondo/pares de ojos"
-    transiciones_existentes = path + "transiciones"
+    eyes_folder = path + "separate_parts_without_background/eyes_pairs"
+    transiciones_existentes = path + "transitions"
 
     phoneme_to_image = {
         'i': '1.png', 'u': '2.png', 'o': '3.png', 'j': '3.png',
