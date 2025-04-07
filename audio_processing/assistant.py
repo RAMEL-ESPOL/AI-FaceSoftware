@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from queue import Queue
 from tempfile import NamedTemporaryFile
 import openai
-import gtts
+#import gtts
 import pygame
 import warnings
 import numpy as np
@@ -74,10 +74,10 @@ class Assistant:
             print(f"Error en la llamada a OpenAI: {e}")
             return "Lo siento, no puedo procesar tu solicitud en este momento."
 
-    def tts(self, texto):
-        tts = gtts.gTTS(texto, lang='es')
-        audio_path = os.path.join(os.getcwd(), 'audio.mp3')
-        tts.save(audio_path)
+    #def tts(self, texto):
+    #    tts = gtts.gTTS(texto, lang='es')
+    #    audio_path = os.path.join(os.getcwd(), 'audio.mp3')
+    #    tts.save(audio_path)
 
     def play_audio_pygame(self, filename):
         try:
