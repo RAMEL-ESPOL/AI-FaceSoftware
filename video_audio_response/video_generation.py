@@ -99,15 +99,15 @@ def crear_video_boca(shut_mouth, sequence, sequence_points, durations, image_fol
         if i < len(sequence) - 1 and sequence[i]  != os.path.join(image_folder, shut_mouth[mouth_emotion]) and sequence[i+1] != os.path.join(image_folder, shut_mouth[mouth_emotion]):
             
             number_1 = sequence[i].split('/')[-1].split('.')[0]
-            print(number_1)
+            #print(number_1)
 
             number_2 = sequence[i+1].split('/')[-1].split('.')[0]
-            print(number_2)
+            #print(number_2)
 
             if number_1 == number_2:
                 clip = ImageClip(image, duration= duracion_transicion * num_images)
                 clips.append(clip)
-                print("igual")
+                #print("igual")
             else:
 
                 if os.path.exists(transiciones_existentes + "/transition_frames_" + number_1 + " a "  + number_2) or os.path.exists(transiciones_existentes + "/transition_frames_" + number_2 + " a "  + number_1) :
@@ -204,7 +204,7 @@ def total_video_generation(respuesta):
         # Configuración de la API de OpenAI
     #openai.api_key = os.getenv("OPENAI_API_KEY")
     openai.api_key = ""  # Coloca tu clave de OpenAI aquí
-    print(openai.api_key )
+    #print(openai.api_key )
 
     path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'faces')) + "/"
 
@@ -254,7 +254,7 @@ def total_video_generation(respuesta):
     generar_audio(respuesta, audio_path,velocidad=0.8)
     emocion, shut_mouth_expression, open_eyes_expression = detectar_emocion_y_expresion(respuesta, emocion_a_expresion)
     total_duration = eliminar_silencios(audio_path, trimmed_audio_path)
-    print(emocion, shut_mouth_expression, open_eyes_expression)
+    #print(emocion, shut_mouth_expression, open_eyes_expression)
     #mouth_emotion = "pout"
     #eye_emotion = "meh"
     sequence, sequence_points, durations = mapear_texto_a_imagenes(total_duration, respuesta, image_folder, points_folder, phoneme_to_image, phoneme_to_points, shut_mouth, shut_mouth_points, mouth_emotion = shut_mouth_expression)
@@ -280,4 +280,4 @@ if __name__ == "__main__":
 
     # Termina el temporizador y calcula la duración
     elapsed_time = time.time() - start_time
-    print(f"Tiempo de ejecución: {elapsed_time:.2f} segundos")
+    #print(f"Tiempo de ejecución: {elapsed_time:.2f} segundos")

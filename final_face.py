@@ -11,9 +11,10 @@ import time
 from moviepy.editor import VideoFileClip
 from queue import Queue
 # Añade el directorio src a sys.path
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__), ".."))
-from video_generation import total_video_generation
+#sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from video_audio_response.video_generation import total_video_generation
 import numpy as np
+sys.path.append('/opt/ros/noetic/lib/python3/dist-packages')
 import rospy
 from std_msgs.msg import String
 
@@ -23,7 +24,7 @@ sys.path.append(current_dir)
 
 
 # Rutas de las imágenes
-carpetaImgs = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'faces')) + "/"
+carpetaImgs = os.path.abspath(os.path.join(os.path.dirname(__file__), 'faces')) + "/"
 IMAGEN_DEFAULT = carpetaImgs + "default.png"
 IMAGEN_PARPADEO = carpetaImgs + "blink2_normal.png"
 IMAGEN_FELIZ = carpetaImgs + "happy.png"
@@ -51,7 +52,7 @@ pasosVertical = 5
 
 
 # Agrega la carpeta principal catkin_ws/src
-directorio_principal = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+directorio_principal = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 sys.path.append(directorio_principal)
 
 # Ahora puedes usar funciones o clases de utilidad
