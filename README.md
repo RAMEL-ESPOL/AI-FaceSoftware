@@ -32,8 +32,9 @@ Recordar dar permisos a los archivos con chmod +x nomarchivo.launch
     source devel/setup.bash
 
 Para correr el sistema de expresión facial 
+```bash
     roslaunch software_interactive multiplatform.launch
-
+```
 
 
 
