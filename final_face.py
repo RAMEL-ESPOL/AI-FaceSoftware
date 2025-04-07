@@ -10,20 +10,22 @@ import threading
 import time
 from moviepy.editor import VideoFileClip
 from queue import Queue
-# Añade el directorio src a sys.path
-#sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from video_audio_response.video_generation import total_video_generation
+from audio_processing.utils import read_file
+from audio_processing.assistant import Assistant
 import numpy as np
+# Add the directory of rospy in case it's not found
 sys.path.append('/opt/ros/noetic/lib/python3/dist-packages')
 import rospy
 from std_msgs.msg import String
 
-# Agregar la ruta del archivo actual a PYTHONPATH
-current_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the directory of the present file        
+current_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 sys.path.append(current_dir)
 
 
-# Rutas de las imágenes
+# Establish the main images routes
+# These are going to show along with the commands that are established in the config.yaml
 carpetaImgs = os.path.abspath(os.path.join(os.path.dirname(__file__), 'faces')) + "/"
 IMAGEN_DEFAULT = carpetaImgs + "default.png"
 IMAGEN_PARPADEO = carpetaImgs + "blink2_normal.png"
@@ -35,43 +37,21 @@ IMAGEN_PENSANDO = carpetaImgs + "thinking.png"
 IMAGEN_BOCAABIERTA = carpetaImgs + "open_mouth.png"
 IMAGEN_BOCACERRADA = carpetaImgs + "close_mouth.png"
 IMAGEN_LISTO = carpetaImgs + "ready.png"
-# Lista de rutas de imágenes
 
+#Blinking secuence
 SECUENCIA_IMAGENES = [IMAGEN_PARPADEO,IMAGEN_DEFAULT]
 
-# Añadir lista de tiempos para cada imagen
-TIEMPOS_IMAGENES = [0.1, 2.0]  # Tiempo en segundos para cada imagen en SECUENCIA_IMAGENES
+# List of time for the blinking sequence, the first item belongs to the closed eyes and the second belongs to the eyes while open
+TIEMPOS_IMAGENES = [0.1, 2.0]  # Time in seconds por each image in SECUENCIA_IMAGENES
 
 
-# Posición de inicio de la ventana
+# Begining posicion of the window
 window_position = [0, 0]
 pasosHorizontal = 5
 pasosVertical = 5
 
-
-
-
-# Agrega la carpeta principal catkin_ws/src
-directorio_principal = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-sys.path.append(directorio_principal)
-
-# Ahora puedes usar funciones o clases de utilidad
-from audio_processing.utils import read_file
-from audio_processing.assistant import Assistant
-
-
-def moverVentana():
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_a]:  # Izquierda
-        window_position[0] -= pasosHorizontal
-    if keys[pygame.K_d]:  # Derecha
-        window_position[0] += pasosHorizontal
-    if keys[pygame.K_w]:  # Arriba
-        window_position[1] -= pasosVertical
-    if keys[pygame.K_s]:  # Abajo
-        window_position[1] += pasosVertical
-    #print(f"Posición de la ventana: {window_position}")
-
+# The function below is to select de desired display in case there are more than one
+# 
 def seleccionar_pantalla():
     pygame.init()
     pantallas = pygame.display.get_desktop_sizes()
@@ -103,9 +83,9 @@ def seleccionar_pantalla():
                 elif event.key == pygame.K_RETURN:
                     seleccion_hecha = True
 
-    # Calcular la posición global de la pantalla seleccionada
+    # Calculate the global position of the selected screen
     x_global = sum(pantallas[i][0] for i in range(seleccionada))
-    y_global = 0  # Asumiendo que las pantallas están alineadas horizontalmente
+    y_global = 0  # Assuming the screens are aligned horizontally
 
     pygame.display.quit()
     return seleccionada, pantallas[seleccionada], (x_global, y_global)
@@ -121,6 +101,22 @@ def centrar_ventana(pantalla_res, position):
     ]
 
 
+
+# This funtion is for moving the window in case it's necesary to be adjusted to the robot
+def moverVentana():
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_a]:  # Izquierda
+        window_position[0] -= pasosHorizontal
+    if keys[pygame.K_d]:  # Derecha
+        window_position[0] += pasosHorizontal
+    if keys[pygame.K_w]:  # Arriba
+        window_position[1] -= pasosVertical
+    if keys[pygame.K_s]:  # Abajo
+        window_position[1] += pasosVertical
+    #print(f"Posición de la ventana: {window_position}")
+
+
+
 class final_face:
     def __init__(self):
         rospy.init_node('final_face')
@@ -129,12 +125,12 @@ class final_face:
         self.number = "0"
         self.respuesta = ""
         self.previous_respuesta = ""  # Para rastrear la respuesta anterior
-        CONFIG_PARAMS = read_file(directorio_principal + "/" + "config", "yaml")
+        CONFIG_PARAMS = read_file(current_dir + "/" + "config", "yaml")
         self.comands = CONFIG_PARAMS["comands"]
 
 
         try:
-            with open(directorio_principal + "/" + "basics_responses.json", "r", encoding='utf-8') as f:
+            with open(current_dir + "/" + "basics_responses.json", "r", encoding='utf-8') as f:
                 basics_responses = json.load(f)
                 self.basics_responses = {key.lower(): value for key, value in basics_responses.items()}
         except (FileNotFoundError, json.JSONDecodeError):
@@ -321,7 +317,7 @@ class final_face:
                         pygame.mixer.init()
 
                         # Cargar el archivo MP3
-                        archivo_mp3 = current_dir + "/Te quiero - Barney Latinoamérica.mp3"  # Reemplaza con la ruta de tu archivo MP3
+                        archivo_mp3 = current_dir + "/songs/Te quiero - Barney Latinoamérica.mp3"  # Reemplaza con la ruta de tu archivo MP3
                         pygame.mixer.music.load(archivo_mp3)
 
                         # Reproducir el archivo
