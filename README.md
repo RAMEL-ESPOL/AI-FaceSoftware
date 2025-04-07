@@ -2,7 +2,6 @@
 ![Imagen de Yaren](https://github.com/RAMEL-ESPOL/YAREN/blob/main/YarenPerfil.png)
 
 ## Ejecución del funcionamiento
-### Primer paso
 Habilitar permisos 
 ```bash
 git clone https://github.com/RAMEL-ESPOL/SoftwareInteractive.git
@@ -33,8 +32,10 @@ Recordar dar permisos a los archivos con chmod +x nomarchivo.launch
 
 Para correr el sistema de expresión facial 
 ```bash
-    roslaunch software_interactive multiplatform.launch
+roslaunch software_interactive multiplatform.launch
 ```
+
+
 
 
 
