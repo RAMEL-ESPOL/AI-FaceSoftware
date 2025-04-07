@@ -2,7 +2,7 @@
 ![Imagen de Yaren](https://github.com/RAMEL-ESPOL/SoftwareInteractive/blob/main/MultiplatformSoftware.png)
 
 ## Ejecución del funcionamiento
-Habilitar permisos 
+Clonar el repositorio
 ```bash
 git clone https://github.com/RAMEL-ESPOL/SoftwareInteractive.git
 ```
@@ -34,8 +34,8 @@ Para correr el sistema de expresión facial
 ```bash
 roslaunch software_interactive multiplatform.launch
 ```
-
-
+En caso de querer acceder al repositorio acerca del control de los motores para poder tener interacciones no verbales (bailes, movimientos corporales, etc) y poder jugar en la pantalla LCD mediante las articulaciones del robot, visitar el siguiente enlace.
+https://github.com/RAMEL-ESPOL/YAREN.git
 
 
 
