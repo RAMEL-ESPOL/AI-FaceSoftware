@@ -35,9 +35,7 @@ Para correr el sistema de expresión facial
 roslaunch software_interactive multiplatform.launch
 ```
 ## Movimientos Corporales y juegos
-En caso de querer acceder al repositorio acerca del control de los motores para poder tener interacciones no verbales (bailes, movimientos corporales, etc) y poder jugar en la pantalla LCD mediante las articulaciones del robot, visitar el siguiente enlace.
-```bash
-https://github.com/RAMEL-ESPOL/YAREN.git
+En caso de querer acceder al repositorio acerca del control de los motores para poder tener interacciones no verbales (bailes, movimientos corporales, etc) y poder jugar en la pantalla LCD mediante las articulaciones del robot, visitar el siguiente enlace: https://github.com/RAMEL-ESPOL/YAREN.git.
 ```
 
 
