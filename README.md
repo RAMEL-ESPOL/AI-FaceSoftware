@@ -5,11 +5,7 @@ Development of a Multi-Platform AI-Based Software for Managing Children's Stress
 
     cd/SoftwareInteractive
 
-    sudo apt install portaudio19-dev python3-pyaudio
-
-    sudo apt install wmctrl
-
-    sudo apt install ffmpeg
+    sudo apt install -y portaudio19-dev python3-pyaudio wmctrl ffmpeg
 
     pip install -r requirements.txt
 
@@ -24,6 +20,9 @@ Recordar dar permisos a los archivos con chmod +x nomarchivo.launch
 
 Para correr el sistema de expresión facial 
     roslaunch software_interactive multiplatform.launch
+
+
+
 
 
 
