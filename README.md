@@ -10,16 +10,16 @@ git clone https://github.com/RAMEL-ESPOL/SoftwareInteractive.git
 
 Ingresar a la siguiente dirección
 ```bash
-    cd/SoftwareInteractive
+cd/SoftwareInteractive
 ```
 
 Instalar las siguientes dependencias
 ```bash
-    sudo apt install -y portaudio19-dev python3-pyaudio wmctrl ffmpeg
+sudo apt install -y portaudio19-dev python3-pyaudio wmctrl ffmpeg
 ```
 
 ```bash
-    pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 En caso de no tener instalado ROS, visitar: https://wiki.ros.org/ROS/Installation
