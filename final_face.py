@@ -124,7 +124,6 @@ class final_face:
         
         self.number = "0"
         self.respuesta = ""
-        self.previous_respuesta = ""  # Para rastrear la respuesta anterior
         CONFIG_PARAMS = read_file(current_dir + "/" + "config", "yaml")
         self.comands = CONFIG_PARAMS["comands"]
 
@@ -149,34 +148,34 @@ class final_face:
         #        va = Assistant(model, record_timeout, phrase_timeout, energy_threshold, wake_word,comands,prompt,basics_responses)
 
 
-        # Configuración de la ventana
+        # Window settings
         pygame.init()
 
-        # Selección de pantalla
+        # Screen selection
         seleccionada, res_pantalla,position = seleccionar_pantalla()
         centrar_ventana(res_pantalla,position)
 
         self.window_width, self.window_height = 800, 480
-        # Configurar ventana en la posición seleccionada
+        # Set window to selected position
         os.environ['SDL_VIDEO_WINDOW_POS'] = f"{window_position[0]},{window_position[1]}"
         self.window = pygame.display.set_mode((self.window_width, self.window_height), pygame.NOFRAME)
         pygame.display.set_caption("YAREN Face")
 
-        # Secuencia de imágenes y tiempos
+        # Sequence of images and times
         self.expressions = cycle(SECUENCIA_IMAGENES)
         self.times = cycle(TIEMPOS_IMAGENES)
         self.current_image = next(self.expressions)
         self.current_time = next(self.times)
-        self.last_switch_time = pygame.time.get_ticks()  # Tiempo del último cambio de imagen
+        self.last_switch_time = pygame.time.get_ticks()  # Time of last image change
 
         self.video_queue = Queue()
         self.video_ready = threading.Event()
-        self.detect_commands_running = threading.Event()  # Señal para pausar/reanudar detección de comandos
+        self.detect_commands_running = threading.Event()  # Signal to pause/resume command detection
 
 
     def detect_commands(self):
         while not rospy.is_shutdown():
-            # Esperar si la detección de comandos está pausada
+            # Wait if command detection is paused
             self.detect_commands_running.wait()
 
             pose_num, respuesta = self.assistant.listen_movement_comand()
@@ -199,16 +198,16 @@ class final_face:
         video_clip = self.video_queue.get()
         self.video_ready.clear()
 
-        # Inicializar y reproducir el audio si está presente
+        # Initialize and play audio if present
         if video_clip.audio:
             video_clip.audio.write_audiofile("temp_audio.mp3", fps=44100)
             pygame.mixer.init()
             pygame.mixer.music.load("temp_audio.mp3")
             pygame.mixer.music.play()
 
-        # Reproducir los frames mientras el audio esté activo
+        # Play frames while audio is active
         for frame in video_clip.iter_frames(fps=24, with_times=False):
-            if not pygame.mixer.music.get_busy():  # Detener si el audio terminó
+            if not pygame.mixer.music.get_busy():  # Stop if audio ended
                 break
 
             frame_surface = pygame.surfarray.make_surface(np.swapaxes(frame, 0, 1))
@@ -216,11 +215,11 @@ class final_face:
             self.window.blit(frame_surface, (0, 0))
             pygame.display.flip()
 
-        # Asegurarse de detener el audio si no lo está ya
+        # Make sure to stop the audio if it isn't already.
         pygame.mixer.music.stop()
         video_clip.close()
 
-        # Reanudar detección de comandos después de reproducir el video
+        # Resume command detection after playing video
         self.detect_commands_running.set()
 
     def generate_video(self, respuesta):
@@ -230,7 +229,7 @@ class final_face:
             self.video_queue.put(video_clip)
             self.video_ready.set()
 
-            # Pausar detección de comandos mientras se genera el video
+            # Pause command detection while video is being generated
             self.detect_commands_running.clear()
 
         except Exception as e:
@@ -239,25 +238,24 @@ class final_face:
     def show_special_image(self, image_path,sleep_time=5):
         image = pygame.image.load(image_path)
 
-        # Limpiar la ventana antes de dibujar la nueva imagen
-        self.window.fill((0, 0, 0))  # Rellena la ventana con negro (RGB: 0, 0, 0)
-
+        # Clear the window before drawing the new image
+        self.window.fill((0, 0, 0))  # Fill the window with black (RGB: 0, 0, 0)
+    
         self.window.blit(image, (0, 0))
         pygame.display.flip()
-        time.sleep(sleep_time)  # Mostrar la imagen durante 5 segundos
-
+        time.sleep(sleep_time)  # Display the image for 5 seconds
     
 
     def main(self):
         clock = pygame.time.Clock()
         running = True
         
-        # Iniciar hilo para detección de comandos
+        # Start thread for command detection
         command_thread = threading.Thread(target=self.detect_commands, daemon=True)
         command_thread.start()
 
         
-        # Activar detección de comandos inicialmente
+        # Activate command detection initially
         self.detect_commands_running.set()
 
         while running and not rospy.is_shutdown():
@@ -271,10 +269,10 @@ class final_face:
                         running = False
 
 
-                # Obtener tiempo actual
+                # Get current time
                 current_ticks = pygame.time.get_ticks()
 
-                # Reproducir video si está listo
+                # Play video if ready
                 if self.video_ready.is_set():
                     self.play_video()
    
@@ -287,7 +285,7 @@ class final_face:
                     - es cierto que te vas de viaje
                     """
 
-                    # Mostrar imagen especial si el número es "1", "2", o "4"
+                    # Show special image if the number is "1", "2", or "4"
                     if self.number == "1":
                         self.show_special_image(IMAGEN_DINERO)
                     elif self.number == "2":
@@ -309,25 +307,25 @@ class final_face:
                         self.show_special_image(IMAGEN_FELIZ)
 
                         SECUENCIA_IMAGENES_BARNEY = [IMAGEN_PARPADEO,IMAGEN_DEFAULT]
-                        # Añadir lista de tiempos para cada imagen
-                        TIEMPOS_IMAGENES_BARNEY = [0.1, 2.0] 
-
-                        #REPRODUCIR CANCION DE BARNEY
-                        # Inicializar pygame mixer
+                        # Add list of durations for each image
+                        TIEMPOS_IMAGENES_BARNEY = [0.1, 2.0]
+    
+                        # PLAY BARNEY SONG
+                        # Initialize pygame mixer
                         pygame.mixer.init()
-
-                        # Cargar el archivo MP3
+    
+                        # Load MP3 file
                         archivo_mp3 = current_dir + "/songs/Te quiero - Barney Latinoamérica.mp3"  # Reemplaza con la ruta de tu archivo MP3
                         pygame.mixer.music.load(archivo_mp3)
 
-                        # Reproducir el archivo
+                        # Play the file
                         pygame.mixer.music.play()
 
-                        # Esperar mientras el audio se reproduce
+                        # Wait while the audio is playing
                         while pygame.mixer.music.get_busy():
-                            #pygame.time.Clock().tick(10)  # Evitar uso intensivo de CPU
+                            # pygame.time.Clock().tick(10)  # Avoid high CPU usage
                             for i, imagen in enumerate(SECUENCIA_IMAGENES_BARNEY):
-                                # Manejar eventos para evitar que la ventana se congele
+                                # Handle events to prevent window from freezing
                                 for event in pygame.event.get():
                                     if event.type == pygame.QUIT:
                                         pygame.mixer.music.stop()
@@ -335,36 +333,35 @@ class final_face:
                                         exit()
                                 self.show_special_image(imagen,TIEMPOS_IMAGENES_BARNEY[i])
                         
-                        # Asegurarse de detener el audio si no lo está ya
+                        # Ensure the audio is stopped if it is not already
                         pygame.mixer.music.stop()
 
                     self.number = str(1)
                     self.pub_commands.publish(f"{self.number}")
                     print(f"Publicado: {self.number}")
 
-                # Cambiar de imagen si se cumple el tiempo
+                # Switch image if time condition is met
                 elif (current_ticks - self.last_switch_time) / 1000.0 >= self.current_time:
                     self.current_image = next(self.expressions)
                     self.current_time = next(self.times)
                     self.last_switch_time = current_ticks
 
-                # Mostrar la imagen actual
-                    # Mostrar la imagen actual
+                    # Display the current image
                     image = pygame.image.load(self.current_image)
 
-                    # Limpiar la ventana antes de dibujar la nueva imagen
-                    self.window.fill((0, 0, 0))  # Rellena la ventana con negro (RGB: 0, 0, 0)
+                    # Clear the window before drawing the new image
+                    self.window.fill((0, 0, 0))  # Fill the window with black (RGB: 0, 0, 0)
 
                     self.window.blit(image, (0, 0))
                     pygame.display.flip()
 
                     moverVentana()
 
-                    # Actualiza la posición de la ventana usando wmctrl
+                    # Update window position using wmctrl
                     subprocess.run(['wmctrl', '-r', ':ACTIVE:', '-e', f'0,{window_position[0]},{window_position[1]},-1,-1'])
 
 
-                    # Actualizar la pantalla
+                    # Update the display
                 clock.tick(60)
 
 
