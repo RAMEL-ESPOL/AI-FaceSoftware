@@ -1,4 +1,4 @@
-# Multi-Platform AI-Based Software for Managing Children's Stress
+# Multi-Platform AI-Based Software for the Accompaniment and Support of Children in Hospitals
 
 ![Image of Yaren](https://github.com/RAMEL-ESPOL/SoftwareInteractive/blob/main/MultiplatformSoftware.png)
 
