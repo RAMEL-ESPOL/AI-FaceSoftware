@@ -1,6 +1,6 @@
 # Multi-Platform AI-Based Software for the Accompaniment and Support of Children in Hospitals
 
-![Image of Yaren](https://github.com/RAMEL-ESPOL/SoftwareInteractive/blob/main/MultiplatformSoftware.png)
+![Image of Yaren](https://github.com/RAMEL-ESPOL/SoftwareInteractive/blob/main/README_FILES/MultiplatformSoftware.png)
 
 ## Execution Instructions
 
