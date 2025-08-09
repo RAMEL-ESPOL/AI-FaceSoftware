@@ -47,7 +47,7 @@ roslaunch software_interactive multiplatform.launch
 
 ## Body Movements and Games
 
-![Image of Yaren](https://github.com/RAMEL-ESPOL/SoftwareInteractive/blob/main/22d.png)
+![Image of Yaren](https://github.com/RAMEL-ESPOL/SoftwareInteractive/blob/main/README_FILES/22d.png)
 
 If you want to access the repository related to motor control to enable non-verbal interactions (dances, body movements, etc.) and play on the LCD screen through the robot's joints, visit the following link: [https://github.com/RAMEL-ESPOL/YAREN.git](https://github.com/RAMEL-ESPOL/YAREN.git)
 
